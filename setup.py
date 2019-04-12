@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from setuptools import setup, find_packages
-from .imrpyml2019.init import train
+from imrpyml2019.init import train
 import distutils.cmd
 import distutils.command.build
 
@@ -46,11 +46,13 @@ setup(
     author_email='ibrahim.umar@hi.no',
     url='https://github.com/iambaim/python-keras-ml-ci',
     license=license,
-    packages=find_packages(exclude=('tests', 'docs')),
+    packages=['imrpyml2019'],
+    include_package_data=True,
     install_requires=[
         "tensorflow",
         "numpy",
-        "matplotlib"
+        "matplotlib",
+        "pillow"
     ],
     cmdclass={
         'prepare': PrepareCommand,
