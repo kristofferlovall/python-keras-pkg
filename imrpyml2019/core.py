@@ -11,7 +11,6 @@ import numpy as np
 from tensorflow.keras.preprocessing import image
 
 def getClassNames():
-    # Class names
     class_names = ['T-shirt/top', 'Trouser', 'Pullover', 'Dress', 'Coat',
                'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle boot']
     return class_names
@@ -20,19 +19,30 @@ def classify(fileInput):
 
     print("Trying to classify: " + fileInput)
     
-    # Load model
+    # Load pre-generated model
     modelfile = 'my_model.h5'
     modelpath = pkg_resources.resource_filename(__name__, modelfile)
     new_model = keras.models.load_model(modelpath)
 
-    # Load images
+    # Image dimensions
     img_width, img_height = 28, 28
 
+    # Load image with a specified dimension
     img = image.load_img(fileInput, target_size=(img_width, img_height))
+
+    # Convert to numpy array
     x = np.asarray(img)
+
+    # Get only one channel
     x = x[:,:,0]
+
+    # Inverse value
     x = 255 - x
+
+    # We use 0 - 1 range
     x = x/255.
+
+    # Put it inside an array of image
     x = np.expand_dims(x, axis=0)
 
     # Predict image
@@ -41,7 +51,6 @@ def classify(fileInput):
 
     # Print out information
     class_names = getClassNames()
-
     print("Image " + fileInput + " is classified as " + class_names[result])
 
-    return 0
+    return result

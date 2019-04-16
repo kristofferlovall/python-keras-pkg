@@ -21,10 +21,10 @@ def train():
     ])
 
     model.compile(optimizer='adam',
-            loss='sparse_categorical_crossentropy',
+            loss=keras.losses.sparse_categorical_crossentropy,
             metrics=['accuracy'])
 
-    model.fit(train_images, train_labels, epochs=5)
+    model.fit(train_images, train_labels, epochs=7)
 
     print('Saving model')
 
@@ -32,4 +32,9 @@ def train():
     modelpath = filepath + '/my_model.h5'
     model.save(modelpath)
 
-    print('Model saved to:' + filepath + 'my_model.h5')
+    print('Model saved to:' + filepath + '/my_model.h5')
+
+    test_loss, test_acc = model.evaluate(test_images, test_labels)
+    print('Test accuracy:', test_acc)
+
+    return test_acc
