@@ -27,7 +27,6 @@ install:
   - export PIP_EXE=pip${PY_VER}
   - $PIP_EXE install pytest
   - $PIP_EXE install wheel
-  - $PIP_EXE install --upgrade numpy
   - $PIP_EXE install -r requirements.txt
   - $PIP_EXE install .
 

@@ -4,6 +4,7 @@ from setuptools import setup, find_packages
 from imrpyml2019.init import train
 import distutils.cmd
 import distutils.command.build
+import sys
 
 with open('README.rst') as f:
     readme = f.read()
@@ -48,7 +49,7 @@ try:
         def get_tag(self):
             python, abi, plat = _bdist_wheel.get_tag(self)
             # We don't contain any python source
-            python, abi = 'py2.py3', 'none'
+            python, abi = 'py' + str(sys.version_info.major) + str(sys.version_info.minor), 'none'
             return python, abi, plat
 
 except ImportError:
@@ -56,7 +57,7 @@ except ImportError:
 
 setup(
     name='imrpyml2019',
-    version='0.0.1',
+    version='0.0.2',
     description='Sample package for creating a multi-platform package for Keras pre-compiled model',
     long_description=readme,
     author='Ibrahim Umar',
