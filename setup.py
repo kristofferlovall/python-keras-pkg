@@ -37,6 +37,23 @@ class BuildPyCommand(distutils.command.build.build):
     self.run_command('prepare')
     distutils.command.build.build.run(self)
 
+# From https://stackoverflow.com/questions/45150304/how-to-force-a-python-wheel-to-be-platform-specific-when-building-it
+try:
+    from wheel.bdist_wheel import bdist_wheel as _bdist_wheel
+    class bdist_wheel(_bdist_wheel):
+        def finalize_options(self):
+            _bdist_wheel.finalize_options(self)
+            self.root_is_pure = False
+
+        def get_tag(self):
+            python, abi, plat = _bdist_wheel.get_tag(self)
+            # We don't contain any python source
+            python, abi = 'py2.py3', 'none'
+            return python, abi, plat
+
+except ImportError:
+    bdist_wheel = None
+
 setup(
     name='imrpyml2019',
     version='0.0.1',
@@ -55,6 +72,7 @@ setup(
         "pillow"
     ],
     cmdclass={
+        'bdist_wheel': bdist_wheel,
         'prepare': PrepareCommand,
         'build': BuildPyCommand
     },
