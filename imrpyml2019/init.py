@@ -6,7 +6,16 @@ from tensorflow import keras
 
 import os, pkg_resources
 
+# For reproducibility
+from numpy.random import seed
+from tensorflow import set_random_seed
+
 def train():
+
+    # Set seed
+    seed(1)
+    set_random_seed(2)
+
     print(tf.__version__)
     fashion_mnist = keras.datasets.fashion_mnist
     (train_images, train_labels), (test_images, test_labels) = fashion_mnist.load_data()

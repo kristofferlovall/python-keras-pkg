@@ -10,12 +10,19 @@ from tensorflow import keras
 import numpy as np
 from tensorflow.keras.preprocessing import image
 
+# For reproducibility
+from numpy.random import seed
+from tensorflow import set_random_seed
+
 def getClassNames():
     class_names = ['T-shirt/top', 'Trouser', 'Pullover', 'Dress', 'Coat',
                'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle boot']
     return class_names
 
 def classify(fileInput):
+
+    seed(1)
+    set_random_seed(2)
 
     print("Trying to classify: " + fileInput)
     
