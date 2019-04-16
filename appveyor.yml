@@ -1,7 +1,4 @@
 environment:
-  token:
-    secure: lwJ/Q1SM5sDyCIzZbHRQAPzgJMCcEwDAi7tPU/OQRlbkp9kHtpHOLnLKC2L+c6Sf
-
   matrix:
 
     # For Python versions available on Appveyor, see
@@ -39,15 +36,16 @@ artifacts:
   - path: dist\*
 
 before_deploy:
-  - ps: |
-          $env:PKGVER = & "%PYTHON%\\python.exe setup.py --version"
+  - "%PYTHON%\\python.exe setup.py --version > tempFile"
+  - "set /p PKGVER= < tempFile"
+
 deploy:
   tag: '$(PKGVER)'
   release: '$(PKGVER)'
   description: ''
   provider: GitHub
   auth_token:
-    secure: $(TOKEN)
+    secure: lwJ/Q1SM5sDyCIzZbHRQAPzgJMCcEwDAi7tPU/OQRlbkp9kHtpHOLnLKC2L+c6Sf
   artifact: dist\*
   draft: false
   prerelease: false
