@@ -13,6 +13,9 @@ matrix:
           language: generic
           env: PY_VER=3
 
+# Avoid trigger build if tag is set (because we tag manually below)
+if: tag IS blank
+
 # Perform the manual steps on osx to install python and activate venv
 before_install:
     - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then pip${PY_VER} install virtualenv; fi
@@ -32,3 +35,20 @@ install:
 script:
   - pytest
   - python${PY_VER} setup.py bdist_wheel
+
+before_deploy:
+  # Set up git user name and tag this commit
+  - git config --global user.email "builds@travis-ci.com"
+  - git config --global user.name "Travis CI"
+  - export TRAVIS_TAG=`python setup.py --version`
+  - git tag -f $TRAVIS_TAG
+
+deploy:
+  provider: releases
+  api_key:
+    secure: $TOKEN
+  file_glob: true
+  file: dist/*
+  skip_cleanup: true
+  on:
+    branch: master
