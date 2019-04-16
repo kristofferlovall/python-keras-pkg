@@ -1,4 +1,6 @@
 environment:
+  token:
+    secure: lwJ/Q1SM5sDyCIzZbHRQAPzgJMCcEwDAi7tPU/OQRlbkp9kHtpHOLnLKC2L+c6Sf
 
   matrix:
 
@@ -18,6 +20,10 @@ install:
   - "%PYTHON%\\python.exe -m pip install -r requirements.txt"
   - "%PYTHON%\\python.exe -m pip install ."
 
+for:
+  -
+    skip_tags: true
+
 build: off
 
 test_script:
@@ -32,7 +38,19 @@ artifacts:
   # bdist_wheel puts your built wheel in the dist directory
   - path: dist\*
 
-#on_success:
-#  You can use this step to upload your artifacts to a public website.
-#  See Appveyor's documentation for more details. Or you can simply
-#  access your wheels from the Appveyor "artifacts" tab for your build.
+before_deploy:
+  - ps: |
+          $env:PKGVER = & "%PYTHON%\\python.exe setup.py --version"
+deploy:
+  tag: '$(PKGVER)'
+  release: '$(PKGVER)'
+  description: ''
+  provider: GitHub
+  auth_token:
+    secure: $(TOKEN)
+  artifact: dist\*
+  draft: false
+  prerelease: false
+  force_update: true
+  on:
+    branch: master
